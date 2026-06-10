@@ -36,6 +36,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/MultiArrayDimension.msg"
   "msg/MultiArrayLayout.msg"
   "msg/String.msg"
+  "msg/TestFeature.msg"
   "msg/UInt16.msg"
   "msg/UInt16MultiArray.msg"
   "msg/UInt32.msg"
