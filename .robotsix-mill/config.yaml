@@ -1,0 +1,20 @@
+# robotsix-mill workspace member config for the ros2 example_interfaces fork.
+#
+# This is a ROS 2 ament_cmake / C++17 package whose interfaces are
+# rosidl-generated. The mill test harness runs `test_command` via `sh`,
+# where `source` is unavailable, so the command is wrapped in `bash -c`
+# and sources the ROS 2 environment before invoking colcon.
+test_command: >-
+  bash -c 'source /opt/ros/lyrical/setup.bash &&
+  colcon build --packages-select example_interfaces &&
+  colcon test --packages-select example_interfaces &&
+  colcon test-result --verbose'
+
+languages:
+  - cpp
+
+# This fork tracks upstream ros2/example_interfaces. The fork has no `main`;
+# its default branch is `rolling` and the working branch is `lyrical`.
+cross_repo_target:
+  url: https://github.com/ros2/example_interfaces.git
+  branch: lyrical

@@ -1,0 +1,4 @@
+# colcon / ament build artifacts — never commit these.
+build/
+install/
+log/
