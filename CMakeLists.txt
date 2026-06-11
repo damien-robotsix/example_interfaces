@@ -53,5 +53,20 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 install(FILES mapping_rules.yaml DESTINATION share/${PROJECT_NAME})
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(rclcpp REQUIRED)
+  ament_add_gtest(test_publish_test_feature test/test_publish_test_feature.cpp)
+  if(TARGET test_publish_test_feature)
+    # Link this package's own generated C++ typesupport so the test can
+    # use example_interfaces::msg::TestFeature defined in the same package.
+    rosidl_get_typesupport_target(cpp_typesupport_target
+      ${PROJECT_NAME} "rosidl_typesupport_cpp")
+    target_link_libraries(test_publish_test_feature
+      rclcpp::rclcpp
+      "${cpp_typesupport_target}")
+  endif()
+endif()
+
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()
