@@ -1,0 +1,2 @@
+# General improvement audit (CI, pre-commit hooks, linters)
+name: audit
