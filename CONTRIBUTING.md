@@ -16,3 +16,7 @@ Contributors must sign-off each commit by adding a `Signed-off-by: ...`
 line to commit messages to certify that they have the right to submit
 the code they are contributing to the project according to the
 [Developer Certificate of Origin (DCO)](https://developercertificate.org/).
+
+## Pre-commit hooks
+
+Install [pre-commit](https://pre-commit.com/) and run `pre-commit install` to enable the hooks locally.
