@@ -54,6 +54,26 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 install(FILES mapping_rules.yaml DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
+  # Write AMENT_IGNORE markers so that linter directory walkers skip the
+  # build/ and install/ trees.  All standard linters (cppcheck, cpplint,
+  # uncrustify, lint_cmake, xmllint, copyright) check for AMENT_IGNORE
+  # during recursive directory walks and prune the subtree when found.
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/build")
+    file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/build/AMENT_IGNORE" "")
+  endif()
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/install")
+    file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/install/AMENT_IGNORE" "")
+  endif()
+
+  # AMENT_LINT_AUTO_EXCLUDE must be set BEFORE find_package(ament_lint_auto)
+  # and must use CMake package names, not ROS package names.
+  # Uncomment the next line to skip copyright header linting:
+  # list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
+
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+
+  # ── Existing GTest setup ────────────────────────────────────────────
   find_package(ament_cmake_gtest REQUIRED)
   find_package(rclcpp REQUIRED)
   ament_add_gtest(test_publish_test_feature test/test_publish_test_feature.cpp)
