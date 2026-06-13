@@ -38,10 +38,28 @@ jobs:
         shell: bash
         run: |
           source /opt/ros/lyrical/setup.bash
-          colcon build --packages-up-to example_interfaces
+          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+          colcon mixin update default
+          colcon build --packages-up-to example_interfaces --mixin coverage-gcc
       - name: Test
         shell: bash
         run: |
           source /opt/ros/lyrical/setup.bash
           colcon test --packages-select example_interfaces
           colcon test-result --verbose
+      - name: Generate coverage report
+        shell: bash
+        run: |
+          apt-get update && apt-get install -y lcov
+          lcov --capture --directory build --output-file coverage.info \
+            --ignore-errors mismatch,gcov,unused,empty
+          lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' --output-file coverage.info \
+            --ignore-errors unused,empty
+          lcov --list coverage.info
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.info
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
