@@ -22,44 +22,28 @@ jobs:
   build-and-test:
     name: build-and-test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution: [humble, jazzy, rolling]
+        include:
+          - ros_distribution: humble
+            container_image: rostooling/setup-ros-docker:ubuntu-jammy-latest
+          - ros_distribution: jazzy
+            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
+          - ros_distribution: rolling
+            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
     container:
-      image: ros:lyrical-ros-base
+      image: ${{ matrix.container_image }}
     steps:
       - uses: actions/checkout@v4
+      - uses: ros-tooling/action-ros-ci@v0.4
+        id: action_ros_ci_step
         with:
-          path: src/example_interfaces
-      - name: Install dependencies with rosdep
-        shell: bash
-        run: |
-          apt-get update
-          rosdep update
-          rosdep install --from-paths src --ignore-src -y
-      - name: Build
-        shell: bash
-        run: |
-          source /opt/ros/lyrical/setup.bash
-          colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-          colcon mixin update default
-          colcon build --packages-up-to example_interfaces --mixin coverage-gcc
-      - name: Test
-        shell: bash
-        run: |
-          source /opt/ros/lyrical/setup.bash
-          colcon test --packages-select example_interfaces
-          colcon test-result --verbose
-      - name: Generate coverage report
-        shell: bash
-        run: |
-          apt-get update && apt-get install -y lcov
-          lcov --capture --directory build --output-file coverage.info \
-            --ignore-errors mismatch,gcov,unused,empty
-          lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' --output-file coverage.info \
-            --ignore-errors unused,empty
-          lcov --list coverage.info
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+          package-name: example_interfaces
+          target-ros2-distro: ${{ matrix.ros_distribution }}
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          files: coverage.info
-          fail_ci_if_error: false
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          name: colcon-logs-${{ matrix.ros_distribution }}
+          path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
