@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+      - uses: pre-commit/action@v3.0.1
+
+  build-and-test:
+    name: build-and-test
+    runs-on: ubuntu-latest
+    container:
+      image: ros:lyrical-ros-base
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: src/example_interfaces
+      - name: Install dependencies with rosdep
+        shell: bash
+        run: |
+          apt-get update
+          rosdep update
+          rosdep install --from-paths src --ignore-src -y
+      - name: Build
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon build --packages-up-to example_interfaces
+      - name: Test
+        shell: bash
+        run: |
+          source /opt/ros/lyrical/setup.bash
+          colcon test --packages-select example_interfaces
+          colcon test-result --verbose
