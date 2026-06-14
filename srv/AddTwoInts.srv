@@ -1,4 +1,8 @@
+# This is an example of a service to add two integers.
+# This can be used for testing but a semantically meaningful
+# one should be created to be built upon.
+
 int64 a
 int64 b
 ---
-int64 sum
+int64 sum # the result of adding a and b
