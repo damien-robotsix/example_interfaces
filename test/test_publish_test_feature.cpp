@@ -15,8 +15,8 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <future>
 #include <memory>
-#include <thread>
 
 #include "rclcpp/rclcpp.hpp"
 
@@ -35,30 +35,40 @@ TEST(TestPublishTestFeature, PublishSubscribeRoundTrip)
   rclcpp::QoS qos(rclcpp::KeepLast(10));
   qos.reliable();
 
-  auto publisher =
-    node->create_publisher<example_interfaces::msg::TestFeature>("test_feature", qos);
+  auto promise = std::make_shared<std::promise<example_interfaces::msg::TestFeature>>();
+  auto future = promise->get_future();
 
-  example_interfaces::msg::TestFeature::SharedPtr received;
+  rclcpp::TimerBase::SharedPtr timer;
   auto subscription = node->create_subscription<example_interfaces::msg::TestFeature>(
     "test_feature", qos,
-    [&received](example_interfaces::msg::TestFeature::SharedPtr msg) {
-      received = msg;
+    [promise, &timer](example_interfaces::msg::TestFeature::SharedPtr msg) {
+      // Cancel the republish timer first so the callback never sets the
+      // promise value twice (set_value would throw std::future_error).
+      timer->cancel();
+      promise->set_value(*msg);
     });
+
+  auto publisher =
+    node->create_publisher<example_interfaces::msg::TestFeature>("test_feature", qos);
 
   example_interfaces::msg::TestFeature message;
   message.name = "hello";
   message.value = 42;
 
-  const auto deadline = std::chrono::steady_clock::now() + 5s;
-  while (!received && std::chrono::steady_clock::now() < deadline) {
-    publisher->publish(message);
-    rclcpp::spin_some(node);
-    std::this_thread::sleep_for(50ms);
-  }
+  // Republish periodically so the message is delivered once discovery completes.
+  timer = node->create_wall_timer(50ms, [publisher, message]() {
+        publisher->publish(message);
+      });
 
-  ASSERT_TRUE(received) << "TestFeature message was not received before timeout";
-  EXPECT_EQ(received->name, "hello");
-  EXPECT_EQ(received->value, 42);
+  rclcpp::executors::SingleThreadedExecutor exec;
+  exec.add_node(node);
+  auto ret = exec.spin_until_future_complete(future, 5s);
+
+  ASSERT_EQ(ret, rclcpp::FutureReturnCode::SUCCESS)
+    << "TestFeature message was not received before timeout";
+  const auto received = future.get();
+  EXPECT_EQ(received.name, "hello");
+  EXPECT_EQ(received.value, 42);
 
   if (rclcpp::ok()) {
     rclcpp::shutdown();
