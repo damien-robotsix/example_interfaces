@@ -1,3 +1,7 @@
+# This is an example action that computes the Fibonacci sequence up to a
+# given order. It is provided to demonstrate and test action interfaces;
+# a semantically meaningful one should be created to be built upon.
+
 # Goal
 int32 order
 ---
