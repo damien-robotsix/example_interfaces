@@ -13,13 +13,13 @@ jobs:
     name: pre-commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
         with:
           python-version: "3.x"
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
-      - uses: pre-commit/action@v3.0.1
+      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd  # v3.0.1
 
   build-and-test:
     name: build-and-test
@@ -38,13 +38,13 @@ jobs:
     container:
       image: ${{ matrix.container_image }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: ros-tooling/action-ros-ci@v0.4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: ros-tooling/action-ros-ci@3a640b10f09b756dabe556dac5413aba369f71b0  # v0.4
         id: action_ros_ci_step
         with:
           package-name: example_interfaces
           target-ros2-distro: ${{ matrix.ros_distribution }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
         if: always()
         with:
           name: colcon-logs-${{ matrix.ros_distribution }}
