@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ros_distribution: [humble, jazzy, rolling]
+        ros_distribution: [humble, jazzy, rolling, lyrical]
         include:
           - ros_distribution: humble
             container_image: rostooling/setup-ros-docker:ubuntu-jammy-latest
@@ -35,6 +35,8 @@ jobs:
             container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
           - ros_distribution: rolling
             container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
+          - ros_distribution: lyrical
+            container_image: rostooling/setup-ros-docker:ubuntu-resolute-ros-lyrical-ros-base-latest
     container:
       image: ${{ matrix.container_image }}
     steps:
