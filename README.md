@@ -56,3 +56,14 @@ Further reading
 
 * [About ROS 2 interfaces](https://docs.ros.org/en/rolling/Concepts/Basic/About-Interfaces.html)
 * [Creating custom msg and srv files](https://docs.ros.org/en/rolling/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.html)
+
+License
+-------
+
+The interface files (`msg/*.msg`, `srv/*.srv`, `action/*.action`) are
+REUSE-compliant via `REUSE.toml`, which declares `Apache-2.0` for all 34 files
+with copyright held by `2026 Damien SIX <damien@robotsix.net>`.
+
+> **TODO:** Full REUSE compliance for all other repository files
+> (`CMakeLists.txt`, `package.xml`, CI configuration, mapping rules, etc.)
+> is deferred to a follow-up ticket.

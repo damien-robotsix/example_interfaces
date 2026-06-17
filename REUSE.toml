@@ -1,0 +1,19 @@
+version = 1
+
+[[annotations]]
+path = "**/*.msg"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Damien SIX <damien@robotsix.net>"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "**/*.srv"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Damien SIX <damien@robotsix.net>"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "**/*.action"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Damien SIX <damien@robotsix.net>"
+SPDX-License-Identifier = "Apache-2.0"
