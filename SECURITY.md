@@ -16,3 +16,4 @@ promptly.
 | `rolling` | :white_check_mark: |
 | `jazzy`   | :white_check_mark: |
 | `humble`  | :white_check_mark: |
+| `lyrical` | :white_check_mark: |
