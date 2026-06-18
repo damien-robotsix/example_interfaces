@@ -60,10 +60,7 @@ Further reading
 License
 -------
 
-The interface files (`msg/*.msg`, `srv/*.srv`, `action/*.action`) are
-REUSE-compliant via `REUSE.toml`, which declares `Apache-2.0` for all 34 files
-with copyright held by `2026 Damien SIX <damien@robotsix.net>`.
-
-> **TODO:** Full REUSE compliance for all other repository files
-> (`CMakeLists.txt`, `package.xml`, CI configuration, mapping rules, etc.)
-> is deferred to a follow-up ticket.
+This repository is fully REUSE-compliant. All files are covered by
+`REUSE.toml` annotations declaring `Apache-2.0` with copyright held by
+`2026 Damien SIX <damien@robotsix.net>`. The full license text is
+available in `LICENSES/Apache-2.0.txt`.

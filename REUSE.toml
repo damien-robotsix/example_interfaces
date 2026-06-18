@@ -17,3 +17,9 @@ path = "**/*.action"
 precedence = "override"
 SPDX-FileCopyrightText = "2026 Damien SIX <damien@robotsix.net>"
 SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "**"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Damien SIX <damien@robotsix.net>"
+SPDX-License-Identifier = "Apache-2.0"
