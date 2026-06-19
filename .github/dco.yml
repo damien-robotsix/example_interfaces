@@ -1,2 +1,4 @@
-exempt-authors = ["dependabot[bot]", "github-actions[bot]"]
-trivial-pattern = "^(ci|docs|chore|typo|style|test):"
+exempt-authors:
+  - dependabot[bot]
+  - github-actions[bot]
+trivial-pattern: "^(ci|docs|chore|typo|style|test):"
