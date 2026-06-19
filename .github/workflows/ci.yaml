@@ -13,6 +13,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  dco:
+    name: DCO
+    runs-on: ubuntu-latest
+    steps:
+      - uses: KineticCafe/actions-dco@v3
+
   pre-commit:
     name: pre-commit
     runs-on: ubuntu-latest
