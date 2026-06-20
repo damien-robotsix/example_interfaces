@@ -21,7 +21,10 @@ jobs:
       contents: read
       pull-requests: read
     steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
       - uses: KineticCafe/actions-dco@v3
+        with:
+          base-branch: ${{ github.event.pull_request.base.ref }}
 
   pre-commit:
     name: pre-commit
