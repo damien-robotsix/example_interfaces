@@ -1,0 +1,2 @@
+# Backward-compatibility check (deprecated interfaces, compatibility shims, legacy aliases)
+name: bc_check
