@@ -1,0 +1,3 @@
+# Detect defined-but-unreferenced interfaces, declared-but-unimplemented services,
+# CMake targets missing interface files, and sibling-pattern gaps.
+name: completeness_check
