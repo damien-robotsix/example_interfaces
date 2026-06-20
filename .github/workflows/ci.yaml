@@ -17,7 +17,7 @@ jobs:
     name: DCO
     runs-on: ubuntu-latest
     steps:
-      - uses: KineticCafe/actions-dco@v2
+      - uses: KineticCafe/actions-dco@v3
 
   pre-commit:
     name: pre-commit
@@ -77,7 +77,7 @@ jobs:
             {
               "build": { "mixin": ["coverage-gcc"] }
             }
-          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/7558e35befbff0d88d9b8f701b3ab1b073cbcaba/index.yaml
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
         if: always()
         with:
