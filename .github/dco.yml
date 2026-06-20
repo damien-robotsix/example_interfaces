@@ -1,4 +1,5 @@
 exempt-authors:
   - dependabot[bot]
   - github-actions[bot]
+  - robotsix-mill
 trivial-pattern: "^(ci|docs|chore|typo|style|test):"

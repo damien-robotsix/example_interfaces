@@ -14,7 +14,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
+rosidl_generate_interfaces(
+  ${PROJECT_NAME}
   "action/Fibonacci.action"
   "msg/Bool.msg"
   "msg/Byte.msg"
@@ -48,16 +49,15 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/WString.msg"
   "srv/AddTwoInts.srv"
   "srv/SetBool.srv"
-  "srv/Trigger.srv"
-)
+  "srv/Trigger.srv")
 
 install(FILES mapping_rules.yaml DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
-  # Write AMENT_IGNORE markers so that linter directory walkers skip the
-  # build/ and install/ trees.  All standard linters (cppcheck, cpplint,
-  # uncrustify, lint_cmake, xmllint, copyright) check for AMENT_IGNORE
-  # during recursive directory walks and prune the subtree when found.
+  # Write AMENT_IGNORE markers so that linter directory walkers skip the build/
+  # and install/ trees.  All standard linters (cppcheck, cpplint, uncrustify,
+  # lint_cmake, xmllint, copyright) check for AMENT_IGNORE during recursive
+  # directory walks and prune the subtree when found.
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/build")
     file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/build/AMENT_IGNORE" "")
   endif()
@@ -65,10 +65,10 @@ if(BUILD_TESTING)
     file(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/install/AMENT_IGNORE" "")
   endif()
 
-  # AMENT_LINT_AUTO_EXCLUDE must be set BEFORE find_package(ament_lint_auto)
-  # and must use CMake package names, not ROS package names.
-  # Uncomment the next line to skip copyright header linting:
-  # list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
+  # AMENT_LINT_AUTO_EXCLUDE must be set BEFORE find_package(ament_lint_auto) and
+  # must use CMake package names, not ROS package names. Uncomment the next line
+  # to skip copyright header linting: list(APPEND AMENT_LINT_AUTO_EXCLUDE
+  # ament_cmake_copyright)
 
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
@@ -78,13 +78,12 @@ if(BUILD_TESTING)
   find_package(rclcpp REQUIRED)
   ament_add_gtest(test_publish_test_feature test/test_publish_test_feature.cpp)
   if(TARGET test_publish_test_feature)
-    # Link this package's own generated C++ typesupport so the test can
-    # use example_interfaces::msg::TestFeature defined in the same package.
-    rosidl_get_typesupport_target(cpp_typesupport_target
-      ${PROJECT_NAME} "rosidl_typesupport_cpp")
-    target_link_libraries(test_publish_test_feature
-      rclcpp::rclcpp
-      "${cpp_typesupport_target}")
+    # Link this package's own generated C++ typesupport so the test can use
+    # example_interfaces::msg::TestFeature defined in the same package.
+    rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}
+                                  "rosidl_typesupport_cpp")
+    target_link_libraries(test_publish_test_feature rclcpp::rclcpp
+                          "${cpp_typesupport_target}")
   endif()
 endif()
 

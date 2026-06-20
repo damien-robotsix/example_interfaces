@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [lyrical]
   pull_request:
-    branches: [main]
+    branches: [lyrical]
   schedule:
     - cron: '0 6 * * 1'
 
@@ -17,7 +17,7 @@ jobs:
     name: DCO
     runs-on: ubuntu-latest
     steps:
-      - uses: KineticCafe/actions-dco@v3
+      - uses: KineticCafe/actions-dco@v2
 
   pre-commit:
     name: pre-commit
@@ -63,7 +63,7 @@ jobs:
           echo "CCACHE_BASEDIR=${{ github.workspace }}" >> $GITHUB_ENV
           echo "CCACHE_DIR=~/.ccache" >> $GITHUB_ENV
           echo "/usr/lib/ccache" >> $GITHUB_PATH
-      - uses: actions/cache@1bd1e32a310b95f0bf2a4b95b7f9a1d2f8e2b1c2  # v4.2.3
+      - uses: actions/cache@v4
         with:
           path: ~/.ccache
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
@@ -83,7 +83,7 @@ jobs:
         with:
           name: colcon-logs-${{ matrix.ros_distribution }}
           path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
-      - uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc4cb9ae1b350e2  # v6
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
           files: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/lcov/total_coverage.info
