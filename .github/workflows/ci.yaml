@@ -16,6 +16,10 @@ jobs:
   dco:
     name: DCO
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: KineticCafe/actions-dco@v3
 
