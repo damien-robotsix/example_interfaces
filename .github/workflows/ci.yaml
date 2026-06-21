@@ -21,7 +21,34 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: KineticCafe/actions-dco@v3
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Create local base branch
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git branch -f ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
+      # Inline DCO check — equivalent to KineticCafe/actions-dco@v3 but
+      # more transparent and with no external action dependency.
+      - name: Check DCO sign-offs
+        run: |
+          set -e
+          BASE="${{ github.event.pull_request.base.ref }}"
+          FAIL=0
+          for commit in $(git log --format='%H' "$BASE..HEAD"); do
+            subject=$(git log -1 --format='%s' "$commit")
+            author=$(git log -1 --format='%an <%ae>' "$commit")
+            if ! git log -1 --format='%B' "$commit" | grep -q '^Signed-off-by:'; then
+              echo "::error::Missing Signed-off-by in commit $commit ($subject) by $author"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "::error::One or more commits lack a DCO sign-off."
+            exit 1
+          fi
+          echo "All commits have DCO sign-offs."
 
   pre-commit:
     name: pre-commit
