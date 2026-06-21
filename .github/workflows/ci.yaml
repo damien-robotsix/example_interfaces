@@ -26,7 +26,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Create local base branch
-        run: git branch -f ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git branch -f ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
       - uses: KineticCafe/actions-dco@v3
         with:
           base-branch: ${{ github.event.pull_request.base.ref }}
