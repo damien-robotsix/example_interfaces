@@ -29,9 +29,24 @@ jobs:
         run: |
           git fetch origin ${{ github.event.pull_request.base.ref }}
           git branch -f ${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.base.ref }}
-      - uses: KineticCafe/actions-dco@v3
-        with:
-          base-branch: ${{ github.event.pull_request.base.ref }}
+      - name: Check DCO sign-offs
+        run: |
+          set -e
+          BASE="${{ github.event.pull_request.base.ref }}"
+          FAIL=0
+          for commit in $(git log --format='%H' "$BASE..HEAD"); do
+            subject=$(git log -1 --format='%s' "$commit")
+            author=$(git log -1 --format='%an <%ae>' "$commit")
+            if ! git log -1 --format='%B' "$commit" | grep -q '^Signed-off-by:'; then
+              echo "::error::Missing Signed-off-by in commit $commit ($subject) by $author"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "::error::One or more commits lack a DCO sign-off."
+            exit 1
+          fi
+          echo "All commits have DCO sign-offs."
 
   pre-commit:
     name: pre-commit
