@@ -56,9 +56,10 @@ TEST(TestPublishTestFeature, PublishSubscribeRoundTrip)
   message.value = 42;
 
   // Republish periodically so the message is delivered once discovery completes.
-  timer = node->create_wall_timer(50ms, [publisher, message]() {
-        publisher->publish(message);
-      });
+  timer = node->create_wall_timer(
+    50ms, [publisher, message]() {
+      publisher->publish(message);
+    });
 
   rclcpp::executors::SingleThreadedExecutor exec;
   exec.add_node(node);

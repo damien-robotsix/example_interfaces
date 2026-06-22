@@ -60,7 +60,10 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
       # ── ccache setup ──────────────────────────────────────────────
+      # Skip ccache for rolling: the ccache apt-get update can interfere
+      # with the rolling apt sources that action-ros-ci sets up later.
       - name: Setup ccache
+        if: matrix.ros_distribution != 'rolling'
         run: |
           sudo apt-get update && sudo apt-get install -y ccache
           ccache --max-size=2G
@@ -68,6 +71,7 @@ jobs:
           echo "CCACHE_DIR=~/.ccache" >> $GITHUB_ENV
           echo "/usr/lib/ccache" >> $GITHUB_PATH
       - uses: actions/cache@v4
+        if: matrix.ros_distribution != 'rolling'
         with:
           path: ~/.ccache
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
