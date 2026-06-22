@@ -27,9 +27,10 @@ jobs:
         run: |
           set -euo pipefail
           BASE="${{ github.event.pull_request.base.sha }}"
-          echo "Checking commits from $BASE to HEAD"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          echo "Checking commits from $BASE to $HEAD_SHA"
           FAIL=0
-          for commit in $(git log --format='%H' "$BASE..HEAD"); do
+          for commit in $(git log --format='%H' "$BASE..$HEAD_SHA"); do
             if ! git log -1 --format='%B' "$commit" | grep -q '^Signed-off-by:'; then
               echo "::error::Commit $commit is missing Signed-off-by trailer"
               FAIL=1
