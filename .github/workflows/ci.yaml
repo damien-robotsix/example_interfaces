@@ -19,9 +19,28 @@ jobs:
     if: github.event_name == 'pull_request'
     permissions:
       contents: read
-      pull-requests: read
     steps:
-      - uses: KineticCafe/actions-dco@v3
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          fetch-depth: 0
+      - name: Check DCO
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          echo "Checking commits from $BASE to $HEAD_SHA"
+          FAIL=0
+          for commit in $(git log --format='%H' "$BASE..$HEAD_SHA"); do
+            if ! git log -1 --format='%B' "$commit" | grep -q '^Signed-off-by:'; then
+              echo "::error::Commit $commit is missing Signed-off-by trailer"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -eq 1 ]; then
+            echo "::error::One or more commits lack a Signed-off-by trailer"
+            exit 1
+          fi
+          echo "All commits have Signed-off-by trailers"
 
   pre-commit:
     name: pre-commit
@@ -60,7 +79,10 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
       # ── ccache setup ──────────────────────────────────────────────
+      # Skip ccache for rolling: the ccache apt-get update can interfere
+      # with the rolling apt sources that action-ros-ci sets up later.
       - name: Setup ccache
+        if: matrix.ros_distribution != 'rolling'
         run: |
           sudo apt-get update && sudo apt-get install -y ccache
           ccache --max-size=2G
@@ -68,6 +90,7 @@ jobs:
           echo "CCACHE_DIR=~/.ccache" >> $GITHUB_ENV
           echo "/usr/lib/ccache" >> $GITHUB_PATH
       - uses: actions/cache@v4
+        if: matrix.ros_distribution != 'rolling'
         with:
           path: ~/.ccache
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
