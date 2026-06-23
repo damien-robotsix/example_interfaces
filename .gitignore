@@ -2,3 +2,23 @@
 build/
 install/
 log/
+
+# Editor backup / swap files
+*~
+*.sw[op]
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Compiled objects
+*.o
+*.obj
