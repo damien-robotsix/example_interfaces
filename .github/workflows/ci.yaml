@@ -21,7 +21,26 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: KineticCafe/actions-dco@v3
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check DCO
+        run: |
+          git branch "${{ github.base_ref }}" "origin/${{ github.base_ref }}"
+          BASE="${{ github.base_ref }}"
+          FAIL=0
+          for commit in $(git log --format='%H' "$BASE..HEAD"); do
+            if ! git log -1 --format='%B' "$commit" | grep -q '^Signed-off-by:'; then
+              echo "Commit $commit is missing Signed-off-by trailer"
+              FAIL=1
+            fi
+          done
+          if [ "$FAIL" -ne 0 ]; then
+            echo "DCO check failed: some commits are missing Signed-off-by"
+            exit 1
+          fi
+          echo "DCO check passed"
 
   pre-commit:
     name: pre-commit
