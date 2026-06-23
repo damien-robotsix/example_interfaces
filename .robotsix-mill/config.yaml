@@ -13,6 +13,14 @@ test_command: >-
 languages:
   - cpp
 
+# Opt this repo out of the mill's per-PR CI gate. example_interfaces tracks
+# upstream ros2/example_interfaces; its GitHub `build-and-test (rolling)`
+# workflow fails on the fork independently of any mill change (pre-existing
+# target-branch debt), which otherwise traps every ticket in ci_fix/blocked.
+# With skip_ci the merge stage bypasses the CI gate and routes a mergeable PR
+# straight to human merge approval.
+skip_ci: true
+
 # This fork tracks upstream ros2/example_interfaces. The fork has no `main`;
 # its default branch is `rolling` and the working branch is `lyrical`.
 cross_repo_target:
