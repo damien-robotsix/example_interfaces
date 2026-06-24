@@ -5,6 +5,7 @@ Changelog for package example_interfaces
 0.0.0 (unreleased)
 -------------------
 * Add AGENT.md with repo purpose, layout, build system, and CI conventions.
+* Add CI and Codecov status badges to README.
 
 0.14.1 (2025-07-01)
 -------------------

@@ -1,6 +1,9 @@
 ROS 2 examples
 ==============
 
+[![CI](https://github.com/damien-robotsix/example_interfaces/actions/workflows/ci.yaml/badge.svg?branch=lyrical)](https://github.com/damien-robotsix/example_interfaces/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/damien-robotsix/example_interfaces/branch/lyrical/graph/badge.svg)](https://codecov.io/gh/damien-robotsix/example_interfaces)
+
 This repository is a fork of [ros2/example_interfaces](https://github.com/ros2/example_interfaces),
 maintained for use by the [robotsix-mill](https://github.com/robotsix) project. It tracks
 upstream while adding a small custom message used to validate the mill end-to-end (E2E)
