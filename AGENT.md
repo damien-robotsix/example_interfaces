@@ -18,7 +18,7 @@ forked sub-repository.
 
 | Directory     | Contents |
 |---------------|----------|
-| `msg/`        | 29 `.msg` files — primitive wrappers, multi-array types, `TestFeature` |
+| `msg/`        | 30 `.msg` files — primitive wrappers, multi-array types, `TestFeature` |
 | `srv/`        | 3 `.srv` files — `AddTwoInts`, `SetBool`, `Trigger` |
 | `action/`     | 1 `.action` file — `Fibonacci` |
 | `test/`       | single GTest file: `test_publish_test_feature.cpp` |
