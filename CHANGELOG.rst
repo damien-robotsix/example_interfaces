@@ -6,6 +6,27 @@ Changelog for package example_interfaces
 -------------------
 * Add AGENT.md with repo purpose, layout, build system, and CI conventions.
 * Add CI and Codecov status badges to README.
+* Add .robotsix-mill/config.yaml — mill workspace member configuration.
+* Add .robotsix-mill/periodic/ — eight automated audit workflows (board
+  cleanup, backward-compatibility, health, test gaps, copy-paste detection,
+  completeness, survey, and general improvements).
+* Add .github/workflows/ci.yaml — full CI pipeline with DCO check, pre-commit,
+  build-and-test matrix (humble, jazzy, rolling, lyrical), ccache, and
+  coverage.
+* Add .github/dependabot.yml — weekly GitHub Actions dependency updates.
+* Add .github/codecov.yml — code coverage gating configuration.
+* Add .github/ISSUE_TEMPLATE/ (bug report, feature request, config) and
+  .github/PULL_REQUEST_TEMPLATE.md — standard contribution templates.
+* Add msg/TestFeature.msg — custom test interface for mill E2E validation.
+* Add test/test_publish_test_feature.cpp — companion gtest binary for
+  TestFeature round-trip publish/subscribe.
+* Add REUSE.toml — REUSE 3.3 license compliance configuration with wildcard
+  annotations for .msg and .srv patterns.
+* Add .pre-commit-config.yaml — pre-commit hooks for whitespace, YAML, merge
+  conflicts, and private keys.
+* Add .lcovrc — lcov configuration for code coverage generation.
+* Expand .gitignore — add colcon build artifacts, editor files, macOS
+  .DS_Store, IDE directories, and compiled objects.
 
 0.14.1 (2025-07-01)
 -------------------
