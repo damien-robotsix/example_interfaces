@@ -84,13 +84,14 @@ jobs:
           sudo apt-get update && sudo apt-get install -y ccache
           ccache --max-size=2G
           echo "CCACHE_BASEDIR=${{ github.workspace }}" >> $GITHUB_ENV
-          echo "CCACHE_DIR=~/.ccache" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
           echo "/usr/lib/ccache" >> $GITHUB_PATH
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
         with:
           path: ~/.ccache
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
           restore-keys: ccache-${{ matrix.ros_distribution }}-
+          save-always: true
       - uses: ros-tooling/action-ros-ci@3a640b10f09b756dabe556dac5413aba369f71b0  # v0.4
         id: action_ros_ci_step
         with:
