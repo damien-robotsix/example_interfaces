@@ -21,7 +21,7 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
@@ -46,7 +46,7 @@ jobs:
     name: pre-commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
         with:
           python-version: "3.x"
@@ -77,7 +77,7 @@ jobs:
     container:
       image: ${{ matrix.container_image }}
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6
       # ── ccache setup ──────────────────────────────────────────────
       - name: Setup ccache
         run: |
@@ -86,7 +86,7 @@ jobs:
           echo "CCACHE_BASEDIR=${{ github.workspace }}" >> $GITHUB_ENV
           echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
           echo "/usr/lib/ccache" >> $GITHUB_PATH
-      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
+      - uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25  # v5
         with:
           path: ~/.ccache
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
@@ -102,7 +102,7 @@ jobs:
               "build": { "mixin": ["coverage-gcc"] }
             }
           colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7
         if: always()
         with:
           name: colcon-logs-${{ matrix.ros_distribution }}
