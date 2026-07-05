@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Validate mapping_rules.yaml structure and cross-reference .srv files.
 #
 # This test script is registered as a CTest (via add_test in CMakeLists.txt).

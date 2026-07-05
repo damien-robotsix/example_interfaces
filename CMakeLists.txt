@@ -88,7 +88,7 @@ if(BUILD_TESTING)
 
   # ── mapping_rules.yaml validation ──────────────────────────────────
   add_test(NAME validate_mapping_rules
-    COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/test/validate_mapping_rules.sh"
+    COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/test/validate_mapping_rules.sh"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
