@@ -47,6 +47,17 @@ Three jobs on every PR/push to `lyrical`:
 | **pre-commit**  | Runs `reuse lint` + pre-commit hooks (includes cmake-format, cmake-lint, shellcheck). |
 | **build-and-test** | Matrix across `humble`, `jazzy`, `rolling`, `lyrical`. Uses `ros-tooling/action-ros-ci` with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
 
+## Stale issue/PR management (`stale.yaml`)
+
+Weekly scheduled workflow (every Monday 07:00 UTC, also triggerable via `workflow_dispatch`)
+using `actions/stale@v9`:
+
+| Config              | Issues | PRs |
+|---------------------|--------|-----|
+| Days until stale    | 60     | 90  |
+| Days until close    | 7      | 14  |
+| Exempt labels       | `pinned`, `security`, `bug`, `enhancement` (same for both) |
+
 ### Mill CI note
 
 `.robotsix-mill/config.yaml` sets `skip_ci: true` — the mill's per-PR CI gate
