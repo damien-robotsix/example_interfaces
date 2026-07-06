@@ -34,7 +34,8 @@ forked sub-repository.
   `AddTwoInts` → `TwoInts`; exported via `package.xml`'s `<ros1_bridge>` export.
 - **Licensing:** Apache-2.0, REUSE-compliant (declared via `REUSE.toml`).
 - **Pre-commit hooks:** trailing-whitespace, end-of-file-fixer, check-yaml,
-  cmake-format, cmake-lint, shellcheck.
+  check-added-large-files, check-merge-conflict, detect-private-key,
+  cmake-format, cmake-lint, shellcheck, reuse.
 - **Changelog:** `CHANGELOG.rst` (RST format, not Markdown).
 
 ## CI (`ci.yaml`)
@@ -44,8 +45,8 @@ Three jobs on every PR/push to `lyrical`:
 | Job             | Notes |
 |-----------------|-------|
 | **DCO**         | `git log --grep '^Signed-off-by:'`; PRs only. |
-| **pre-commit**  | Runs `reuse lint` + pre-commit hooks (includes cmake-format, cmake-lint, shellcheck). |
-| **build-and-test** | Matrix across `humble`, `jazzy`, `rolling`, `lyrical`. Uses `ros-tooling/action-ros-ci` with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
+| **pre-commit**  | Runs pre-commit hooks (includes reuse, cmake-format, cmake-lint, shellcheck). |
+| **build-and-test** | Matrix across `humble`, `jazzy`, `rolling`. Uses `ros-tooling/action-ros-ci` with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
 
 ## Stale issue/PR management (`stale.yaml`)
 
