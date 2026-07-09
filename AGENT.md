@@ -40,12 +40,15 @@ forked sub-repository.
 
 ## CI (`ci.yaml`)
 
-Three jobs on every PR/push to `lyrical`:
+Four jobs on every PR/push to `lyrical` and a weekly Monday 06:00 UTC
+scheduled run.  A concurrency group auto-cancels redundant in-progress runs
+to save CI minutes.
 
 | Job             | Notes |
 |-----------------|-------|
 | **DCO**         | `git log --grep '^Signed-off-by:'`; PRs only. |
 | **pre-commit**  | Runs pre-commit hooks (includes reuse, cmake-format, cmake-lint, shellcheck). |
+| **trivy-scan**  | Scans all files with `aquasecurity/trivy` (CRITICAL+HIGH severity); uploads SARIF results to the GitHub Security tab. |
 | **build-and-test** | Matrix across `humble`, `jazzy`, `rolling`. Uses `ros-tooling/action-ros-ci` with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
 
 ## Stale issue/PR management (`stale.yaml`)
