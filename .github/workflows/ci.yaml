@@ -114,6 +114,13 @@ jobs:
           key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
           restore-keys: ccache-${{ matrix.ros_distribution }}-
           save-always: true
+      - name: Point lcov to .lcovrc config
+        run: |
+          # action-ros-ci places the checkout under <ws>/src/example_interfaces/
+          # but lcov (via colcon coverage-gcc mixin) runs from the workspace root.
+          # lcov searches for .lcovrc from CWD upward, so it won't find the
+          # package's .lcovrc.  Export the LCOVRC env var so lcov picks it up.
+          echo "LCOVRC=${{ github.workspace }}/.lcovrc" >> "$GITHUB_ENV"
       - uses: ros-tooling/action-ros-ci@3a640b10f09b756dabe556dac5413aba369f71b0  # v0.4
         id: action_ros_ci_step
         with:
