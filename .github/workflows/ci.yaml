@@ -78,9 +78,8 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
-  build-and-test:
-    name: build-and-test
   humble:
+    name: humble
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -88,44 +87,6 @@ jobs:
       pull-requests: write
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
-    steps:
-      # (identical steps as current: checkout, ccache, action-ros-ci with
-      #  target-ros2-distro: humble, upload-artifact, codecov, publish-test-results)
-
-  jazzy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
-    container:
-      image: rostooling/setup-ros-docker:ubuntu-noble-latest
-    steps:
-      # (identical to humble, but target-ros2-distro: jazzy)
-
-  rolling:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
-    container:
-      image: rostooling/setup-ros-docker:ubuntu-noble-latest
-    steps:
-      # (identical to humble, but target-ros2-distro: rolling)
-    strategy:
-      fail-fast: false
-      matrix:
-        ros_distribution: [humble, jazzy, rolling]
-        include:
-          - ros_distribution: humble
-            container_image: rostooling/setup-ros-docker:ubuntu-jammy-latest
-          - ros_distribution: jazzy
-            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
-          - ros_distribution: rolling
-            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
-    container:
-      image: ${{ matrix.container_image }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
       # ── ccache setup ──────────────────────────────────────────────
@@ -139,8 +100,8 @@ jobs:
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
         with:
           path: ~/.ccache
-          key: ccache-${{ matrix.ros_distribution }}-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
-          restore-keys: ccache-${{ matrix.ros_distribution }}-
+          key: ccache-humble-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
+          restore-keys: ccache-humble-
           save-always: true
       - name: Point lcov to .lcovrc config
         run: |
@@ -153,7 +114,7 @@ jobs:
         id: action_ros_ci_step
         with:
           package-name: example_interfaces
-          target-ros2-distro: ${{ matrix.ros_distribution }}
+          target-ros2-distro: humble
           colcon-defaults: |
             {
               "build": { "mixin": ["coverage-gcc"] }
@@ -162,7 +123,113 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
         if: always()
         with:
-          name: colcon-logs-${{ matrix.ros_distribution }}
+          name: colcon-logs-humble
+          path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
+      - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7
+        if: always()
+        with:
+          files: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/lcov/total_coverage.info
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
+        if: always()
+        with:
+          files: |
+            ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/build/*/test_results/**/*.xml
+
+  jazzy:
+    name: jazzy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      # ── ccache setup ──────────────────────────────────────────────
+      - name: Setup ccache
+        run: |
+          sudo apt-get update && sudo apt-get install -y ccache
+          ccache --max-size=2G
+          echo "CCACHE_BASEDIR=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
+        with:
+          path: ~/.ccache
+          key: ccache-jazzy-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
+          restore-keys: ccache-jazzy-
+          save-always: true
+      - uses: ros-tooling/action-ros-ci@3a640b10f09b756dabe556dac5413aba369f71b0  # v0.4
+        id: action_ros_ci_step
+        with:
+          package-name: example_interfaces
+          target-ros2-distro: jazzy
+          colcon-defaults: |
+            {
+              "build": { "mixin": ["coverage-gcc"] }
+            }
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+        if: always()
+        with:
+          name: colcon-logs-jazzy
+          path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
+      - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7
+        if: always()
+        with:
+          files: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/lcov/total_coverage.info
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
+        if: always()
+        with:
+          files: |
+            ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/build/*/test_results/**/*.xml
+
+  rolling:
+    name: rolling
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    container:
+      image: rostooling/setup-ros-docker:ubuntu-noble-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
+      # ── ccache setup ──────────────────────────────────────────────
+      - name: Setup ccache
+        run: |
+          sudo apt-get update && sudo apt-get install -y ccache
+          ccache --max-size=2G
+          echo "CCACHE_BASEDIR=${{ github.workspace }}" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
+          echo "/usr/lib/ccache" >> $GITHUB_PATH
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830  # v4
+        with:
+          path: ~/.ccache
+          key: ccache-rolling-${{ hashFiles('CMakeLists.txt', 'package.xml', 'msg/*.msg', 'srv/*.srv', 'action/*.action', 'test/*.cpp') }}
+          restore-keys: ccache-rolling-
+          save-always: true
+      - uses: ros-tooling/action-ros-ci@3a640b10f09b756dabe556dac5413aba369f71b0  # v0.4
+        id: action_ros_ci_step
+        with:
+          package-name: example_interfaces
+          target-ros2-distro: rolling
+          colcon-defaults: |
+            {
+              "build": { "mixin": ["coverage-gcc"] }
+            }
+          colcon-mixin-repository: https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4
+        if: always()
+        with:
+          name: colcon-logs-rolling
           path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
       - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f  # v7
         if: always()

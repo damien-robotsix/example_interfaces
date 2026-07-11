@@ -49,7 +49,9 @@ to save CI minutes.
 | **DCO**         | `git log --grep '^Signed-off-by:'`; PRs only. |
 | **pre-commit**  | Runs pre-commit hooks (includes reuse, cmake-format, cmake-lint, shellcheck). |
 | **trivy-scan**  | Scans all files with `aquasecurity/trivy` (CRITICAL+HIGH severity); uploads SARIF results to the GitHub Security tab. |
-| **build-and-test** | Matrix across `humble`, `jazzy`, `rolling`. Uses `ros-tooling/action-ros-ci` with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
+| **humble** | `ros-tooling/action-ros-ci` on `ubuntu-jammy` (Humble), with ccache and coverage via `coverage-gcc` colcon mixin; uploads logs and Codecov coverage. |
+| **jazzy** | Same as `humble` but on `ubuntu-noble` (Jazzy) with `target-ros2-distro: jazzy`. |
+| **rolling** | Same as `humble` but on `ubuntu-noble` (Rolling) with `target-ros2-distro: rolling`. |
 
 ## Stale issue/PR management (`stale.yaml`)
 
