@@ -27,6 +27,8 @@ Changelog for package example_interfaces
 * Add .lcovrc — lcov configuration for code coverage generation.
 * Expand .gitignore — add colcon build artifacts, editor files, macOS
   .DS_Store, IDE directories, and compiled objects.
+* Add CODE_OF_CONDUCT.md — Contributor Covenant v2.1, reporting to
+  conduct@robotsix.org.
 
 0.14.1 (2025-07-01)
 -------------------
