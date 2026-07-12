@@ -85,6 +85,7 @@ jobs:
       contents: read
       checks: write
       pull-requests: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -141,7 +142,8 @@ jobs:
         with:
           files: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/lcov/total_coverage.info
           disable_search: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ${{ matrix.ros_distribution }}
+          fail_ci_if_error: true
       - name: Publish test results
         uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
         if: always()
