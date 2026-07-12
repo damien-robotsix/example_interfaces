@@ -91,11 +91,11 @@ jobs:
         ros_distribution: [humble, jazzy, rolling]
         include:
           - ros_distribution: humble
-            container_image: rostooling/setup-ros-docker:ubuntu-jammy-latest
+            container_image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-jammy-ros-humble-desktop:latest
           - ros_distribution: jazzy
-            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
+            container_image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-noble-ros-jazzy-desktop:latest
           - ros_distribution: rolling
-            container_image: rostooling/setup-ros-docker:ubuntu-noble-latest
+            container_image: ghcr.io/ros-tooling/setup-ros-docker/setup-ros-docker-ubuntu-noble-ros-rolling-ros-base:latest
     container:
       image: ${{ matrix.container_image }}
     steps:
