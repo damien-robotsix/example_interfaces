@@ -4,11 +4,7 @@
 # rosidl-generated. The mill test harness runs `test_command` via `sh`,
 # where `source` is unavailable, so the command is wrapped in `bash -c`
 # and sources the ROS 2 environment before invoking colcon.
-test_command: >-
-  bash -c '[ -f /opt/ros/rolling/setup.bash ] && source /opt/ros/rolling/setup.bash;
-  colcon build --packages-select example_interfaces &&
-  colcon test --packages-select example_interfaces &&
-  colcon test-result --verbose'
+test_command: bash test/validate_mapping_rules.sh
 
 languages:
   - cpp

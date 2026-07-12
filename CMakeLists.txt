@@ -85,6 +85,11 @@ if(BUILD_TESTING)
     target_link_libraries(test_publish_test_feature rclcpp::rclcpp
                           "${cpp_typesupport_target}")
   endif()
+
+  # ── mapping_rules.yaml validation ──────────────────────────────────
+  add_test(NAME validate_mapping_rules
+    COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/test/validate_mapping_rules.sh"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
 ament_export_dependencies(rosidl_default_runtime)
