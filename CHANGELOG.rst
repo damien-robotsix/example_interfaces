@@ -24,6 +24,8 @@ Changelog for package example_interfaces
   annotations for .msg and .srv patterns.
 * Add .pre-commit-config.yaml — pre-commit hooks for whitespace, YAML, merge
   conflicts, and private keys.
+* Upgrade pre-commit hooks: pre-commit-hooks v5.0.0→v6.0.0,
+  shellcheck-precommit v0.10.0→v0.11.0.
 * Add .lcovrc — lcov configuration for code coverage generation.
 * Expand .gitignore — add colcon build artifacts, editor files, macOS
   .DS_Store, IDE directories, and compiled objects.
