@@ -1,5 +1,6 @@
 ## 0.0.0 (unreleased)
 
+- Add `check-xml` and `rstcheck` pre-commit hooks to validate `package.xml` and `CHANGELOG.rst` syntax.
 - CI: set ``LCOVRC`` environment variable so lcov discovers ``.lcovrc`` during coverage generation
 - AGENT.md: document the `trivy-scan` job, weekly schedule trigger, and concurrency group in the CI section.
 - Correct AGENT.md CI documentation: remove `lyrical` from the build-and-test matrix (only `humble`, `jazzy`, `rolling` are configured), fix pre-commit job description (no standalone `reuse lint` step), and add missing pre-commit hooks (`check-added-large-files`, `check-merge-conflict`, `detect-private-key`, `reuse`).
